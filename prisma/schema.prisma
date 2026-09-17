@@ -8,12 +8,16 @@ datasource db {
 }
 
 model Order {
-  id              String   @id @default(cuid())
-  stripeSessionId String   @unique
-  customerEmail   String?
-  amountTotal     Int
-  currency        String
-  status          String
-  productName     String
-  createdAt       DateTime @default(now())
+  id                     String   @id @default(cuid())
+  stripeSessionId        String?  @unique
+  mpesaCheckoutRequestId String?  @unique
+  mpesaReceiptNumber     String?
+  customerPhone          String?
+  customerEmail          String?
+  amountTotal            Int
+  currency               String
+  status                 String
+  productName            String
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
 }

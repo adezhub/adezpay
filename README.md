@@ -1,13 +1,15 @@
 # adezpay
 
-A working payment site starter built with Next.js and Stripe.
+A working payment site built with Next.js, Stripe Checkout, Prisma, SQLite, and Safaricom Daraja M-Pesa STK Push.
 
-Features:
+## Features
+
 - Product catalog
-- Stripe Checkout integration
-- Success and cancel pages
-- Webhook handling for completed payments
+- Stripe card checkout
+- M-Pesa STK Push checkout
+- Daraja callback processing
 - SQLite + Prisma order tracking
+- Success and cancel pages
 
 ## Setup
 
@@ -21,9 +23,9 @@ Features:
    cp .env.example .env.local
    ```
 
-3. Fill in your Stripe keys in `.env.local`.
+3. Fill in Stripe and Daraja credentials in `.env.local`.
 
-4. Set up the database:
+4. Create/update the local database:
    ```bash
    npx prisma db push
    ```
@@ -33,17 +35,16 @@ Features:
    npm run dev
    ```
 
-6. Open `http://localhost:3000`.
+Open `http://localhost:3000`.
+
+## M-Pesa setup
+
+Create a sandbox app in the Safaricom Daraja developer portal and set `MPESA_CONSUMER_KEY`, `MPESA_CONSUMER_SECRET`, `MPESA_SHORTCODE`, and `MPESA_PASSKEY`. `MPESA_CALLBACK_URL` must be a public HTTPS URL pointing to `/api/mpesa/callback`; for local development, use a tunnel such as ngrok.
+
+The app sends the product price rounded to Kenyan shillings. The callback marks the matching order as `paid` when `ResultCode` is `0`, or `failed` otherwise.
+
+For production, use production Daraja credentials, a verified public domain, your real shortcode/passkey, HTTPS, and server-side secrets. Never commit `.env.local`.
 
 ## Stripe test card
 
-Use the following test card in Stripe test mode:
-- 4242 4242 4242 4242
-- Any future date
-- Any CVC
-
-## Webhook testing
-
-```bash
-stripe listen --forward-to localhost:3000/api/webhook
-```
+Use Stripe test mode with `4242 4242 4242 4242`, any future date, and any CVC.
